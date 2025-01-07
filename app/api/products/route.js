@@ -5,10 +5,7 @@ const MONGODB_URI = "mongodb+srv://admin:AmjuBfihm8vtX8tq@test.gmqrn.mongodb.net
 
 // Garantiza que la conexión a la base de datos solo se realice una vez
 if (!global.mongoose) {
-  global.mongoose = mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  global.mongoose = mongoose.connect(MONGODB_URI);
 }
 
 // Definir el esquema y modelo de producto

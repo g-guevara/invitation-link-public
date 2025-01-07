@@ -1,193 +1,154 @@
 'use client';
 
-import {
-  Card,
-  CardHeader,
-  Calendar,
-  Input,
-  Button,
-  Form,
-} from "@nextui-org/react";
-import { today, getLocalTimeZone, isWeekend, DateValue } from "@internationalized/date";
+import React, { useState, useEffect } from "react";
+import { Calendar, Input, Button, Form } from "@nextui-org/react";
+import { today, getLocalTimeZone, DateValue, parseDate } from "@internationalized/date";
 import { useLocale } from "@react-aria/i18n";
-import React from "react";
-import "@/styles/globals.css";
 
-export default function Home() {
-  let now = today(getLocalTimeZone());
+export default function Agendar() {
+  const now = today(getLocalTimeZone());
+  const [availableHours, setAvailableHours] = useState<string[]>([]);
+  const [reservedData, setReservedData] = useState<any[]>([]); // Datos de horarios reservados
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedHour, setSelectedHour] = useState<string | null>(null);
+  const [action, setAction] = useState<string | null>(null);
 
-  let disabledRanges = [
-    [now, now.add({ days: 5 })],
-    [now.add({ days: 14 }), now.add({ days: 16 })],
-    [now.add({ days: 23 }), now.add({ days: 24 })],
-  ];
+  const { locale } = useLocale();
 
-  let { locale } = useLocale();
+  // Función para obtener los datos de la base de datos
+  const fetchReservedData = async () => {
+    try {
+      const res = await fetch('/api/schedules', { method: 'GET' });
+      if (res.ok) {
+        const data = await res.json();
+        setReservedData(data);
+      } else {
+        throw new Error('Error al obtener datos reservados');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  let isDateUnavailable = (date: DateValue) =>
-    isWeekend(date, locale) ||
-    disabledRanges.some(
-      (interval) =>
-        date.compare(interval[0]) >= 0 &&
-        date.compare(interval[1]) <= 0
-    );
+  // Actualizar horarios disponibles según la fecha seleccionada
+  useEffect(() => {
+    fetchReservedData();
+  }, []);
 
-  const availableHours = Array.from({ length: 15 }, (_, i) => `${8 + i}:00`);
+  useEffect(() => {
+    if (selectedDate) {
+      const allHours = Array.from({ length: 15 }, (_, i) => `${8 + i}:00`);
+      const reservedHours = reservedData
+        .filter((item) => item.date === selectedDate) // Filtrar horas reservadas para la fecha seleccionada
+        .map((item) => item.time);
+      const available = allHours.filter((hour) => !reservedHours.includes(hour));
+      setAvailableHours(available);
+    }
+  }, [selectedDate, reservedData]);
 
-  const [action, setAction] = React.useState<string | null>(null);
+  // Función para manejar el envío del formulario
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    const payload = {
+      ...data,
+      date: selectedDate,
+      time: selectedHour,
+    };
+
+    try {
+      const res = await fetch('/api/schedules', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        setAction(`Agendado: ${JSON.stringify(result)}`);
+        fetchReservedData(); // Actualizar datos después de enviar
+        setSelectedHour(null); // Limpiar hora seleccionada
+      } else {
+        throw new Error('Error al enviar datos');
+      }
+    } catch (error) {
+      console.error(error);
+      setAction('Error al enviar datos');
+    }
+  };
 
   return (
-    <section>
-     
+    <div className="grid gap-8 md:gap-12 lg:grid-cols-3 w-full max-w-5xl px-4 md:px-8 mx-auto">
+      {/* Calendario */}
+      <div className="justify-self-center lg:justify-self-start mt-10 sm:mt-0 md:mt-0">
+        <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left">Selecciona una fecha</h2>
+        <Calendar
+          aria-label="Date (Unavailable)"
+          onChange={(selectedDate) => {
+            if (selectedDate) {
+              const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}`;
+              setSelectedDate(formattedDate);
+            }
+          }}
+        />
+      </div>
 
-      {/* Sección principal: Calendario, Horarios y Formulario */}
-      <div className="grid gap-8 md:gap-12 lg:grid-cols-3 w-full max-w-5xl">
-        {/* Calendario */}
-        <div className="justify-self-center lg:justify-self-start">
-          
-
-        <div className="mb-2">
-        <svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 24 24"
-  width="24"
-  height="24"
->
-  <circle cx="12" cy="12" r="11" fill="none" stroke="black" strokeWidth="1" />
-  <text
-    x="12"
-    y="16"
-    fontSize="12"
-    fontWeight="bold"
-    textAnchor="middle"
-    fill="black"
-  >
-    1
-  </text>
-</svg>
-</div>
-
-
-
-          <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left">
-            Selecciona una fecha
-          </h2>
-          <Calendar
-            aria-label="Date (Unavailable)"
-            isDateUnavailable={isDateUnavailable}
-          />
-        </div>
-
-        {/* Botones de horarios */}
-        <div >
-
-          <div className="mb-2">
-        <svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 24 24"
-  width="24"
-  height="24"
->
-  <circle cx="12" cy="12" r="11" fill="none" stroke="black" strokeWidth="1" />
-  <text
-    x="12"
-    y="16"
-    fontSize="12"
-    fontWeight="bold"
-    textAnchor="middle"
-    fill="black"
-  >
-    2
-  </text>
-</svg>
-</div>
-
-          <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left">
-            Horarios disponibles
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {availableHours.map((hour) => (
-              <button
-                key={hour}
-                className="w-full py-2 rounded-md bg-[#f4f5f4] text-gray-800 shadow hover:bg-gray-200 transition"
-              >
-                {hour}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Formulario */}
-        <div>
-        <div className="mb-2">
-        <svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 24 24"
-  width="24"
-  height="24"
->
-<circle cx="12" cy="12" r="11" fill="none" stroke="black" strokeWidth="1" />
-  <text
-    x="12"
-    y="16"
-    fontSize="12"
-    fontWeight="bold"
-    textAnchor="middle"
-    fill="black"
-  >
-    3
-  </text>
-</svg>
-</div>
-
-          <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left">
-            Completa tus datos
-          </h2>
-          <Form
-            className="flex flex-col gap-4"
-            validationBehavior="native"
-            onReset={() => setAction("reset")}
-            onSubmit={(e) => {
-              e.preventDefault();
-              let data = Object.fromEntries(new FormData(e.currentTarget));
-              setAction(`submit ${JSON.stringify(data)}`);
-            }}
-          >
-            <Input
-              isRequired
-              errorMessage="Por favor ingresa tu nombre"
-              label="Nombre"
-              labelPlacement="outside"
-              name="nombre"
-              placeholder="Ingresa tu nombre"
-              type="text"
-            />
-
-            <Input
-              isRequired
-              errorMessage="Por favor ingresa un email válido"
-              label="Email"
-              labelPlacement="outside"
-              name="email"
-              placeholder="Ingresa tu email"
-              type="email"
-            />
-            <div className="flex gap-2">
-              <Button color="primary" type="submit">
-                Enviar
-              </Button>
-              <Button type="reset" variant="flat">
-                Reiniciar
-              </Button>
-            </div>
-            {action && (
-              <div className="text-sm text-gray-600">
-                Acción: <code>{action}</code>
-              </div>
-            )}
-          </Form>
+      {/* Botones de horarios */}
+      <div>
+        <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left">Horarios disponibles</h2>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-4">
+          {availableHours.map((hour) => (
+            <button
+              key={hour}
+              className={`w-full py-2 rounded-md ${
+                selectedHour === hour ? 'bg-blue-500 text-white' : 'bg-[#f4f5f4] text-gray-800'
+              } shadow hover:bg-gray-200 transition text-sm sm:text-base`}
+              onClick={() => setSelectedHour(hour)}
+              disabled={reservedData.some((item) => item.date === selectedDate && item.time === hour)}
+            >
+              {hour}
+            </button>
+          ))}
         </div>
       </div>
-    </section>
+
+      {/* Formulario */}
+      <div>
+        <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left">Completa tus datos</h2>
+        <Form className="flex flex-col gap-4" validationBehavior="native" onSubmit={handleSubmit}>
+          <Input
+            isRequired
+            errorMessage="Por favor ingresa tu nombre"
+            label="Nombre"
+            labelPlacement="outside"
+            name="name"
+            placeholder="Ingresa tu nombre"
+            type="text"
+          />
+          <Input
+            isRequired
+            errorMessage="Por favor ingresa un email válido"
+            label="Email"
+            labelPlacement="outside"
+            name="email"
+            placeholder="Ingresa tu email"
+            type="email"
+          />
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button color="primary" type="submit" className="w-full sm:w-auto" disabled={!selectedHour}>
+              Enviar
+            </Button>
+            <Button type="reset" variant="flat" className="w-full sm:w-auto" onClick={() => setSelectedHour(null)}>
+              Reiniciar
+            </Button>
+          </div>
+          {action && (
+            <div className="text-sm text-gray-600">
+              Acción: <code>{action}</code>
+            </div>
+          )}
+        </Form>
+      </div>
+    </div>
   );
 }
