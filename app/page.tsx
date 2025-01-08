@@ -19,7 +19,7 @@ export default function Home() {
           solo tienes que pedirlo.
         </h1>
         <p className="mt-4 text-gray-600 text-lg">
-          Invitación para crear páginas web con Guillermo Guevara.
+          Invitación para crear páginas web a medida con Guillermo Guevara.
         </p>
       </div>
 
@@ -45,7 +45,7 @@ export default function Home() {
           </CardHeader>
           <p className="text-gray-700 pl-2 pb-3">
             Antes de pedir una hora, ten en cuenta que debes llevar una idea clara de lo que quieres.
-            Lo ideal sería un boceto, para poder evaluar la viabilidad de tu proyecto.
+            Lo ideal sería un boceto, para poder evaluar la viabilidad de tu proyecto. Puedes ver la pestaña "recursos" para inspirarte.
           </p>
 
         </Card>
