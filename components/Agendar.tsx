@@ -1,21 +1,18 @@
-'use client';
-
 import React, { useState, useEffect } from "react";
 import { Calendar, Input, Button, Form } from "@nextui-org/react";
-import { today, getLocalTimeZone, DateValue, parseDate } from "@internationalized/date";
+import { today, getLocalTimeZone, DateValue } from "@internationalized/date";
 import { useLocale } from "@react-aria/i18n";
 
 export default function Agendar() {
-  const now = today(getLocalTimeZone());
+  const now = today(getLocalTimeZone()); // Día actual
   const [availableHours, setAvailableHours] = useState<string[]>([]);
-  const [reservedData, setReservedData] = useState<any[]>([]); // Datos de horarios reservados
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [reservedData, setReservedData] = useState<any[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string>(`${now.year}-${String(now.month).padStart(2, '0')}-${String(now.day).padStart(2, '0')}`); // Día actual como valor inicial
   const [selectedHour, setSelectedHour] = useState<string | null>(null);
   const [action, setAction] = useState<string | null>(null);
 
   const { locale } = useLocale();
 
-  // Función para obtener los datos de la base de datos
   const fetchReservedData = async () => {
     try {
       const res = await fetch('/api/schedules', { method: 'GET' });
@@ -30,7 +27,6 @@ export default function Agendar() {
     }
   };
 
-  // Actualizar horarios disponibles según la fecha seleccionada
   useEffect(() => {
     fetchReservedData();
   }, []);
@@ -39,14 +35,13 @@ export default function Agendar() {
     if (selectedDate) {
       const allHours = Array.from({ length: 15 }, (_, i) => `${8 + i}:00`);
       const reservedHours = reservedData
-        .filter((item) => item.date === selectedDate) // Filtrar horas reservadas para la fecha seleccionada
+        .filter((item) => item.date === selectedDate)
         .map((item) => item.time);
       const available = allHours.filter((hour) => !reservedHours.includes(hour));
       setAvailableHours(available);
     }
   }, [selectedDate, reservedData]);
 
-  // Función para manejar el envío del formulario
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
@@ -66,8 +61,8 @@ export default function Agendar() {
       if (res.ok) {
         const result = await res.json();
         setAction(`Agendado: ${JSON.stringify(result)}`);
-        fetchReservedData(); // Actualizar datos después de enviar
-        setSelectedHour(null); // Limpiar hora seleccionada
+        fetchReservedData();
+        setSelectedHour(null);
       } else {
         throw new Error('Error al enviar datos');
       }
@@ -77,19 +72,24 @@ export default function Agendar() {
     }
   };
 
+  const isDateUnavailable = (date: DateValue) => {
+    return date.compare(now) < 0; // Deshabilitar fechas anteriores al día actual
+  };
+
   return (
     <div className="grid gap-8 md:gap-12 lg:grid-cols-3 w-full max-w-5xl px-4 md:px-8 mx-auto">
-      {/* Calendario */}
       <div className="justify-self-center lg:justify-self-start mt-10 sm:mt-0 md:mt-0">
         <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left">Selecciona una fecha</h2>
         <Calendar
           aria-label="Date (Unavailable)"
+          isDateUnavailable={isDateUnavailable}
           onChange={(selectedDate) => {
             if (selectedDate) {
               const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}`;
               setSelectedDate(formattedDate);
             }
           }}
+          value={now} // Establecer el día actual como seleccionado
         />
       </div>
 
