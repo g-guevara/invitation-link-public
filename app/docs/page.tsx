@@ -9,8 +9,8 @@ import React from "react";
 
 const rowsData = [
   {
-    title: "Primera fila",
-    subtitle: "Explora contenido relacionado con la primera categoría.",
+    title: "Favoritos",
+    subtitle: "Explora mis fuentes favoritas para determinar un diseño.",
     cards: [
       {
         image: "https://static-00.iconduck.com/assets.00/pinterest-icon-2048x2048-d7p0u7c5.png",
@@ -51,7 +51,7 @@ const rowsData = [
     ],
   },
   {
-    title: "Templates",
+    title: "Plantillas",
     subtitle: "Paginas ya hechas en cuanto a diseño",
     cards: [
       {
@@ -113,8 +113,8 @@ const rowsData = [
     ],
   },
   {
-    title: "Primera fila",
-    subtitle: "Explora contenido relacionado con la primera categoría.",
+    title: "E-commerce",
+    subtitle: "Las mejores plantillas para E-commerce, todo incluido.",
     cards: [
       {
         image: "https://static.vecteezy.com/system/resources/previews/016/673/488/non_2x/shopping-bag-icon-design-template-free-vector.jpg",
@@ -159,7 +159,7 @@ export default function DocsPage() {
   return (
     <div className="w-full h-auto">
       <h1 className={`${title()} text-center`}>Recursos</h1>
-      <p className="mt-4 text-gray-600 text-lg text-center">
+      <p className="mt-4 text-gray-600 text-lg text-center ">
         Encuentra inspiración para antes de nuestra reunión.
       </p>
       <div className="w-full h-auto space-y-8">
