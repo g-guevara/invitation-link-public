@@ -13,22 +13,40 @@ const rowsData = [
     subtitle: "Explora contenido relacionado con la primera categoría.",
     cards: [
       {
-        image: "https://nextui.org/images/hero-card.jpeg",
-        alt: "Card 1",
-        footerText: "Disponible pronto.",
+        image: "https://static-00.iconduck.com/assets.00/pinterest-icon-2048x2048-d7p0u7c5.png",
+        alt: "Pinterest",
+        footerText: "Pinterest",
         footerTextColor: "text-white/80",
-        buttonText: "Más info",
+        buttonText: "Ver",
         buttonTextColor: "text-white",
-        buttonLink: "https://www.youtube.com",
+        buttonLink: "https://www.pinterest.com",
       },
       {
-        image: "https://nextui.org/images/hero-card.jpeg",
-        alt: "Card 2",
-        footerText: "Próximamente.",
-        footerTextColor: "text-gray-300",
-        buttonText: "Detalles",
-        buttonTextColor: "text-blue-500",
-        buttonLink: "https://www.google.com",
+        image: "https://cdn.dribbble.com/userupload/9750980/file/original-abb9e2f8242f871c34d0727ba7868aa7.png?resize=752x&vertical=center",
+        alt: "Dribbble",
+        footerText: "Dribbble",
+        footerTextColor: "text-gray-800",
+        buttonText: "Ver",
+        buttonTextColor: "text-pink-500",
+        buttonLink: "https://dribbble.com/search/websites",
+      },
+      {
+        image: "https://image.spreadshirtmedia.com/image-server/v1/products/T1459A839PA3861PT28D1040125286W10000H2134/views/1,width=550,height=550,appearanceId=839,backgroundColor=F2F2F2/httpster-sticker.jpg",
+        alt: "Httpster",
+        footerText: "Httpster",
+        footerTextColor: "text-gray-800",
+        buttonText: "Ver",
+        buttonTextColor: "text-yellow-200",
+        buttonLink: "https://httpster.net",
+      },
+      {
+        image: "https://images-eds-ssl.xboxlive.com/image?url=4rt9.lXDC4H_93laV1_eHHFT949fUipzkiFOBH3fAiZZUCdYojwUyX2aTonS1aIwMrx6NUIsHfUHSLzjGJFxxo4K81Ei7WzcnqEk8W.MgwZYL9v6HqLuMfZlIwt20gJkLnz8LlzJLalI2ZDsdWnc5u8_qMqCT1QDNkpL7Gsf9m4-&format=source&h=210",
+        alt: "canva",
+        footerText: "Canva",
+        footerTextColor: "text-white",
+        buttonText: "Ver",
+        buttonTextColor: "text-blue-400",
+        buttonLink: "https://canva.com",
       },
     ],
   },
@@ -38,8 +56,8 @@ const rowsData = [
     cards: [
       {
         image: "https://nextui.org/images/hero-card.jpeg",
-        alt: "Card 3",
-        footerText: "Coming soon.",
+        alt: "GitHub",
+        footerText: "GitHub",
         footerTextColor: "text-green-500",
         buttonText: "Learn more",
         buttonTextColor: "text-red-500",
@@ -47,8 +65,8 @@ const rowsData = [
       },
       {
         image: "https://nextui.org/images/hero-card.jpeg",
-        alt: "Card 4",
-        footerText: "Disponible pronto.",
+        alt: "Facebook",
+        footerText: "Facebook",
         footerTextColor: "text-purple-500",
         buttonText: "Más info",
         buttonTextColor: "text-yellow-500",
@@ -83,7 +101,7 @@ export default function DocsPage() {
             <Divider className="my-4" />
 
             {/* Fila de tarjetas */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {row.cards.map((card, cardIndex) => (
                 <Card
                   key={cardIndex}
@@ -96,7 +114,7 @@ export default function DocsPage() {
                 >
                   <Image
                     alt={card.alt}
-                    className="object-cover sm:object-contain"
+                    className="object-cover"
                     height={200} // Tamaño por defecto
                     src={card.image}
                     width={200} // Tamaño por defecto
