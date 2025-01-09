@@ -22,7 +22,7 @@ export default function Home() {
           Invitación para crear páginas web a medida con Guillermo Guevara.
         </p>
       </div>
-
+      <Agendar />
       {/* Tarjeta de Atención */}
       <div className="max-w-xl w-full px-6 mt-10 sm:mt-0 md:mt-0">
       <Card className="p-5" style={{ boxShadow: "1px 6px 20px rgba(83, 143, 240, 0.3)" }}>
@@ -52,7 +52,7 @@ export default function Home() {
       </div>
 
       {/* Sección principal: AGENDAR */}
-      <Agendar />
+
     </section>
   );
 }
