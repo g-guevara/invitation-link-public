@@ -55,7 +55,7 @@ export default function RootLayout({
                 title="nextui.org homepage"
               >
                 <span className="text-default-600">Powered by</span>
-                <p className="text-primary">TailWind, Vercel, Shadcn and NextUI</p>
+                <p className="text-primary">TailWind, Vercel and NextUI</p>
               </Link>
             </footer>
           </div>

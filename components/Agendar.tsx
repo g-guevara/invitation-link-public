@@ -95,22 +95,28 @@ export default function Agendar() {
 
       {/* Botones de horarios */}
       <div>
-        <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left">Horarios disponibles</h2>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-4">
-          {availableHours.map((hour) => (
-            <button
-              key={hour}
-              className={`w-full py-2 rounded-md ${
-                selectedHour === hour ? 'bg-blue-500 text-white' : 'bg-[#f4f5f4] text-gray-800'
-              } shadow hover:bg-gray-200 transition text-sm sm:text-base`}
-              onClick={() => setSelectedHour(hour)}
-              disabled={reservedData.some((item) => item.date === selectedDate && item.time === hour)}
-            >
-              {hour}
-            </button>
-          ))}
-        </div>
-      </div>
+  <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left text-gray-800 dark:text-gray-200">
+    Horarios disponibles
+  </h2>
+  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-4">
+    {availableHours.map((hour) => (
+      <button
+        key={hour}
+        className={`w-full py-2 rounded-md shadow transition text-sm sm:text-base ${
+          selectedHour === hour
+            ? 'bg-blue-500 text-white'
+            : 'bg-[#f4f5f4] text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+        } hover:bg-gray-200 dark:hover:bg-gray-600`}
+        onClick={() => setSelectedHour(hour)}
+        disabled={reservedData.some((item) => item.date === selectedDate && item.time === hour)}
+      >
+        {hour}
+      </button>
+    ))}
+  </div>
+</div>
+
+
 
       {/* Formulario */}
       <div>
@@ -140,26 +146,27 @@ export default function Agendar() {
             </Button>
           </div>
           {action && (
-  <div
-    className="bg-blue-100 border pr-6 border-blue-400 text-blue-700 px-4 py-2 rounded-md text-center relative max-w-full"
-    role="alert"
+            <div
+  className="bg-blue-100 dark:bg-blue-900 border border-blue-400 dark:border-blue-700 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-md text-center relative max-w-full pr-6"
+  role="alert"
+>
+  <strong className="font-semibold">{action}</strong>
+  <button
+    type="button"
+    className="absolute top-1 right-2 text-blue-500 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-400 focus:outline-none"
+    onClick={() => setAction(null)}
   >
-    <strong className="font-semibold">{action}</strong>
-    <button
-      type="button"
-      className="absolute top-1 right-2 text-blue-500 hover:text-blue-700 focus:outline-none "
-      onClick={() => setAction(null)}
+    <svg
+      className="fill-current h-5 w-5"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
     >
-      <svg
-        className="fill-current h-5 w-5"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-      >
-        <title>Cerrar</title>
-        <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-      </svg>
-    </button>
-  </div>
+      <title>Cerrar</title>
+      <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+    </svg>
+  </button>
+</div>
+
 )}
 
 
