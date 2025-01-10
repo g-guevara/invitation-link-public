@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, Input, Button, Form } from "@nextui-org/react";
-import { today, getLocalTimeZone, DateValue } from "@internationalized/date";
+import { today, getLocalTimeZone, DateValue, parseDate } from "@internationalized/date";
 import { useLocale } from "@react-aria/i18n";
 
 export default function Agendar() {
@@ -81,16 +81,17 @@ export default function Agendar() {
       <div className="justify-self-center lg:justify-self-start mt-10 sm:mt-0 md:mt-0">
         <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left">Selecciona una fecha</h2>
         <Calendar
-          aria-label="Date (Unavailable)"
-          isDateUnavailable={isDateUnavailable}
-          onChange={(selectedDate) => {
-            if (selectedDate) {
-              const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}`;
-              setSelectedDate(formattedDate);
-            }
-          }}
-          value={now} // Establecer el día actual como seleccionado
-        />
+  aria-label="Selecciona una fecha"
+  isDateUnavailable={isDateUnavailable}
+  value={parseDate(selectedDate)} // Transforma selectedDate a DateValue
+  onChange={(selectedDate) => {
+    if (selectedDate) {
+      const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}`;
+      setSelectedDate(formattedDate);
+    }
+  }}
+  className="custom-calendar"
+/>
       </div>
 
       {/* Botones de horarios */}
