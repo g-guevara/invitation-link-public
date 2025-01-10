@@ -91,7 +91,7 @@ export default function Agendar() {
     }
   }}
   className="custom-calendar"
-/>
+/> 
       </div>
 
       {/* Botones de horarios */}
