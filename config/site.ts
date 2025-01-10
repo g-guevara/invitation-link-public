@@ -26,7 +26,7 @@ export const siteConfig = {
     },
     {
       label: "-",
-      href: "/docs",
+      href: "/about",
     },
   ],
   links: {
