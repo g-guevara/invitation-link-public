@@ -45,7 +45,7 @@ export default function Home() {
           </CardHeader>
           <p className="text-gray-700 pl-2 pb-3">
             Antes de pedir una hora, ten en cuenta que debes llevar una idea clara de lo que quieres.
-            Lo ideal sería un boceto, para poder evaluar la viabilidad de tu proyecto. Puedes ver la pestaña "recursos" para inspirarte.
+            Lo ideal sería un boceto, para poder evaluar la viabilidad de tu proyecto. Puedes ver la pestaña Recursos para inspirarte.
           </p>
 
         </Card>
