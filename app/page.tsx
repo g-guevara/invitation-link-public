@@ -17,7 +17,7 @@ export default function Home() {
           <br />
         </h1>
         <p className="mt-4 text-gray-600 text-lg">
-          Invitación para crear páginas web a medida con Guillermo Guevara.
+          Invitación para crear páginas web a medida con Guillermo Guevara. Selecione una fecha para concretar una reunion.
         </p>
       </div>
       <Agendar />
