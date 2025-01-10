@@ -24,6 +24,10 @@ export const siteConfig = {
       label: "Recursos",
       href: "/docs",
     },
+    {
+      label: "-",
+      href: "/docs",
+    },
   ],
   links: {
     github: "https://github.com/g-guevara",
