@@ -33,7 +33,7 @@ export const siteConfig = {
     github: "https://github.com/g-guevara",
     twitter: "https://www.linkedin.com/in/guillermo-guevara-585267294/",
     docs: "https://nextui.org",
-    discord: "https://discord.gg/9b6yyZKmH4",
+    discord: "https://wa.me/56975437751",
     sponsor: "https://patreon.com/jrgarciadev",
   },
 };
