@@ -10,13 +10,11 @@ export default function Home() {
     <section className="flex flex-col items-center justify-center px-4 py-10 gap-1 lg:gap-10 mb-10">
       {/* Encabezado */}
       <div className="text-center max-w-3xl">
-        <h1 className="text-4xl md:text-7xl font-bold leading-tight">
-          Crea &nbsp; <br />
+        <h1 className="text-6xl md:text-9xl font-bold leading-tight">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
-            páginas increíbles,
+            Bienvenido
           </span>
           <br />
-          solo tienes que pedirlo.
         </h1>
         <p className="mt-4 text-gray-600 text-lg">
           Invitación para crear páginas web a medida con Guillermo Guevara.
