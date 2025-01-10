@@ -64,7 +64,7 @@ export async function POST(req) {
     const userMessage = `
       <h1>Confirmación de agenda</h1>
       <p>Hola ${body.name},</p>
-      <p>Tu agenda para el día ${body.date} a las ${body.time} ha sido registrada exitosamente.</p>
+<p>Tu agenda para el día ${body.date} a las ${body.time} ha sido registrada exitosamente. Puedes unirte a través del siguiente enlace de Google Meet: <a href="https://meet.google.com/mrd-zvjv-dpk" target="_blank">https://meet.google.com/mrd-zvjv-dpk</a></p>
     `;
     sendEmail(body.email, 'Confirmación de agenda', userMessage);
 
