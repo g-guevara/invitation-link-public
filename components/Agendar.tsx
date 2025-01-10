@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Calendar, Input, Button, Form } from "@nextui-org/react";
+import { Calendar, Input, Button, Form, Skeleton } from "@nextui-org/react";
 import { today, getLocalTimeZone, DateValue, parseDate } from "@internationalized/date";
 import { useLocale } from "@react-aria/i18n";
 
@@ -10,11 +10,13 @@ export default function Agendar() {
   const [selectedDate, setSelectedDate] = useState<string>(`${now.year}-${String(now.month).padStart(2, '0')}-${String(now.day).padStart(2, '0')}`); // Día actual como valor inicial
   const [selectedHour, setSelectedHour] = useState<string | null>(null);
   const [action, setAction] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // Estado para skeleton
 
   const { locale } = useLocale();
 
   const fetchReservedData = async () => {
     try {
+      setIsLoading(true); // Activa el skeleton
       const res = await fetch('/api/schedules', { method: 'GET' });
       if (res.ok) {
         const data = await res.json();
@@ -24,6 +26,8 @@ export default function Agendar() {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false); // Desactiva el skeleton
     }
   };
 
@@ -81,43 +85,49 @@ export default function Agendar() {
       <div className="justify-self-center lg:justify-self-start mt-10 sm:mt-0 md:mt-0">
         <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left">Selecciona una fecha</h2>
         <Calendar
-  aria-label="Selecciona una fecha"
-  isDateUnavailable={isDateUnavailable}
-  value={parseDate(selectedDate)} // Transforma selectedDate a DateValue
-  onChange={(selectedDate) => {
-    if (selectedDate) {
-      const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}`;
-      setSelectedDate(formattedDate);
-    }
-  }}
-  className="custom-calendar"
-/> 
+          aria-label="Selecciona una fecha"
+          isDateUnavailable={isDateUnavailable}
+          value={parseDate(selectedDate)} // Transforma selectedDate a DateValue
+          onChange={(selectedDate) => {
+            if (selectedDate) {
+              const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}`;
+              setSelectedDate(formattedDate);
+            }
+          }}
+          className="custom-calendar"
+        />
       </div>
 
       {/* Botones de horarios */}
       <div>
-  <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left text-gray-800 dark:text-gray-200">
-    Horarios disponibles
-  </h2>
-  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-4">
-    {availableHours.map((hour) => (
-      <button
-        key={hour}
-        className={`w-full py-2 rounded-md shadow transition text-sm sm:text-base ${
-          selectedHour === hour
-            ? 'bg-blue-500 text-white'
-            : 'bg-[#f4f5f4] text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-        } hover:bg-gray-200 dark:hover:bg-gray-600`}
-        onClick={() => setSelectedHour(hour)}
-        disabled={reservedData.some((item) => item.date === selectedDate && item.time === hour)}
-      >
-        {hour}
-      </button>
-    ))}
-  </div>
-</div>
-
-
+        <h2 className="text-2xl font-semibold mb-4 text-center lg:text-left text-gray-800 dark:text-gray-200">
+          Horarios disponibles
+        </h2>
+        {isLoading ? (
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-4">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <Skeleton key={index} className="w-full h-10 rounded-md" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-4">
+            {availableHours.map((hour) => (
+              <button
+                key={hour}
+                className={`w-full py-2 rounded-md shadow transition text-sm sm:text-base ${
+                  selectedHour === hour
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-[#f4f5f4] text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                } hover:bg-gray-200 dark:hover:bg-gray-600`}
+                onClick={() => setSelectedHour(hour)}
+                disabled={reservedData.some((item) => item.date === selectedDate && item.time === hour)}
+              >
+                {hour}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Formulario */}
       <div>
@@ -148,29 +158,26 @@ export default function Agendar() {
           </div>
           {action && (
             <div
-  className="bg-blue-100 dark:bg-blue-900 border border-blue-400 dark:border-blue-700 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-md text-center relative max-w-full pr-6"
-  role="alert"
->
-  <strong className="font-semibold">{action}</strong>
-  <button
-    type="button"
-    className="absolute top-1 right-2 text-blue-500 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-400 focus:outline-none"
-    onClick={() => setAction(null)}
-  >
-    <svg
-      className="fill-current h-5 w-5"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-    >
-      <title>Cerrar</title>
-      <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-    </svg>
-  </button>
-</div>
-
-)}
-
-
+              className="bg-blue-100 dark:bg-blue-900 border border-blue-400 dark:border-blue-700 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-md text-center relative max-w-full pr-6"
+              role="alert"
+            >
+              <strong className="font-semibold">{action}</strong>
+              <button
+                type="button"
+                className="absolute top-1 right-2 text-blue-500 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-400 focus:outline-none"
+                onClick={() => setAction(null)}
+              >
+                <svg
+                  className="fill-current h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <title>Cerrar</title>
+                  <path d="M14.348 14.849a1 1 0 0 1-1.697 0L10 11.819l-2.651 3.029a1 1 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1 1 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1 1 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1 1 0 0 1 0 1.698z" />
+                </svg>
+              </button>
+            </div>
+          )}
         </Form>
       </div>
     </div>
