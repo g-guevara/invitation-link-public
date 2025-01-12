@@ -11,17 +11,17 @@ export default function Agendar() {
   const [selectedHour, setSelectedHour] = useState<string | null>(null);
   const [action, setAction] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true); // Estado para skeleton
-  const baseUrl = typeof window !== 'undefined' && window.location.origin 
-  ? window.location.origin 
-  : 'http://localhost:3000'; // Fallback en desarrollo
 
   const { locale } = useLocale();
 
   const fetchReservedData = async () => {
     try {
       setIsLoading(true); // Activa el skeleton
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || ''; // Usa la URL base desde las variables de entorno
-      const res = await fetch(`${baseUrl}/api/schedules`, { method: 'GET' });
+      const baseUrl =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000' // Local
+        : 'https://guillermo-guevara-invitacion.vercel.app'; // Producción
+          const res = await fetch(`${baseUrl}/api/schedules`, { method: 'GET' });
       if (res.ok) {
         const data = await res.json();
         setReservedData(data);
